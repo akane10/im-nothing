@@ -4,7 +4,7 @@
   "description": "gitignore generator",
   "main": "main.js",
   "scripts": {
-    "test": "jest --testPathIgnorePatterns boilerplates/"
+    "test": "jest --testPathIgnorePatterns im-nothing/"
   },
   "bin": {
     "im-nothing": "./main.js"
@@ -15,9 +15,10 @@
     "url": "https://github.com/akane10/im-nothing.git"
   },
   "keywords": [
-    "boilerplate",
+    "im-nothing",
     "gitignore",
-    "generator"
+    "generator",
+    "cli"
   ],
   "dependencies": {},
   "devDependencies": {},
