@@ -1,0 +1,25 @@
+{
+  "name": "im-nothing",
+  "version": "1.0.0-beta.0",
+  "description": "gitignore generator",
+  "main": "main.js",
+  "scripts": {
+    "test": "jest --testPathIgnorePatterns boilerplates/"
+  },
+  "bin": {
+    "im-nothing": "./main.js"
+  },
+  "author": "Yapie Rosyadie <yrosyadie@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akane10/im-nothing.git"
+  },
+  "keywords": [
+    "boilerplate",
+    "gitignore",
+    "generator"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "MIT"
+}
