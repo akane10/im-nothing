@@ -1,5 +1,5 @@
 function help() {
-  const x = `
+  const message = `
   command :
   -add <languages> (to generate gitignore)
   -list (show all list language available)
@@ -7,7 +7,7 @@ function help() {
 
   im-nothing <command>
   `;
-  console.log(x);
+  console.log(message);
 }
 
 module.exports = help;
