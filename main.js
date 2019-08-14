@@ -1,16 +1,13 @@
-// const fs = require('fs');
 const list = require('./src/list');
 const add = require('./src/add');
-
-const CURR_DIR = process.cwd();
+const help = require('./src/help');
 
 (function main() {
-  const sourceGitignore = `${CURR_DIR}/gitignore`;
   const [_, __, command, ...args] = process.argv;
 
-  if (command === '-add') return add(sourceGitignore, args);
-  if (command === '-list') return list(sourceGitignore);
+  if (command === '-add') return add(args);
+  if (command === '-list') return list();
+  if (command === '-help') return help();
 
   console.log('command not found');
-  // console.log(y);
 })();

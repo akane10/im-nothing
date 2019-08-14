@@ -1,8 +1,9 @@
 const fs = require('fs');
+const { sourceGitignore } = require('./helper');
 
 // const CURR_DIR = process.cwd();
 
-function list(sourceGitignore) {
+function list() {
   const files = fs.readdirSync(sourceGitignore);
   const f = files.filter(
     i =>
