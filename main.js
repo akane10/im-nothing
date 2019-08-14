@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const list = require('./src/list');
 const add = require('./src/add');
 const help = require('./src/help');
