@@ -1,26 +1,42 @@
 const fs = require('fs');
 const { CURR_DIR, sourceGitignore, searchFile } = require('./helper');
 
-function writing(files) {
-  const report = [];
-
-  const pathToAppend = `${CURR_DIR}/.gitignore`;
-  const appendContents = (path_, contents) =>
-    fs.appendFileSync(path_, contents);
-
-  files.forEach(i => {
-    const contents = fs.readFileSync(`${sourceGitignore}/${i}`, 'utf8');
-    const replaceDotWithSpace = i.replace(/[.]/g, ' ');
-    const commentContent = `\n# ${replaceDotWithSpace}\n` + contents;
-
-    appendContents(pathToAppend, commentContent);
-
-    const [language] = i.split('.');
-    report.push(language.toLowerCase());
+function appendContents(path_, contents) {
+  contents.forEach(i => {
+    fs.appendFileSync(path_, i.content);
   });
+}
+
+function writing(files) {
+  const pathToAppend = `${CURR_DIR}/.gitignore`;
+
+  const readFolder = i => {
+    const content = fs.readFileSync(`${sourceGitignore}/${i}`, 'utf8');
+    return {
+      fileName: i,
+      content
+    };
+  };
+  const commentContent = i => {
+    const fileName = i.fileName.replace(/[.]/g, ' ');
+    return {
+      fileName,
+      content: `\n# ${fileName}\n ${i.content}`
+    };
+  };
+
+  const data = files.map(readFolder).map(commentContent);
+
+  appendContents(pathToAppend, data);
+
+  const splitFileName = i => i.split(' ');
+  const fileNames = data
+    .map(i => i.fileName)
+    .map(splitFileName)
+    .map(([name]) => name);
 
   const reportMessage = `
-  ${report.join()} have been added
+  ${fileNames.join(', ')} have been added
   `;
   console.log(reportMessage);
 }
