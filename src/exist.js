@@ -6,10 +6,8 @@ function exist(languages) {
   const GitignoreFileNames = files.filter(searchFile(languages));
 
   const names = GitignoreFileNames.map(i => {
-    const splited = i.split('.');
-
-    const onlyName = splited[0].toLowerCase();
-    return onlyName;
+    const [name] = i.split('.');
+    return name.toLowerCase();
   });
 
   if (names.length === 0) return console.log('nothing exists');

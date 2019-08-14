@@ -3,21 +3,22 @@ const { sourceGitignore } = require('./helper');
 
 function list() {
   const files = fs.readdirSync(sourceGitignore);
-  const filtered = files.filter(
-    i =>
-      i !== 'README.md' &&
-      i !== '.github' &&
-      i !== '.git' &&
-      i !== 'CONTRIBUTING' &&
-      i !== 'LICENSE' &&
-      i !== '.travis.yml'
-  );
 
-  const names = filtered.map(i => {
-    const splited = i.split('.');
-    const onlyName = splited[0].toLowerCase();
-    return onlyName;
-  });
+  const splitFileName = i => i.split('.');
+  const toLower = ([name]) => name.toLowerCase();
+  const otherThanGitignore = i =>
+    i !== 'README.md' &&
+    i !== '.github' &&
+    i !== '.git' &&
+    i !== 'CONTRIBUTING' &&
+    i !== 'LICENSE' &&
+    i !== '.travis.yml';
+
+  const names = files
+    .filter(otherThanGitignore)
+    .map(splitFileName)
+    .map(toLower);
+
   console.log(names.join(', \n'));
 }
 
