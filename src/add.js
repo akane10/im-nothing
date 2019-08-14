@@ -1,22 +1,18 @@
 const fs = require('fs');
-const { CURR_DIR, sourceGitignore } = require('./helper');
+const { CURR_DIR, sourceGitignore, searchFile } = require('./helper');
 
 function getFile(languages) {
-  const f = languages => file => {
-    const x = languages.filter(i => `${i}.gitignore` === file.toLowerCase());
-    return x[0];
-  };
-
-  const files = fs.readdirSync(sourceGitignore);
-  const x = files.filter(f(languages));
-  return x;
+  const filesInFolder = fs.readdirSync(sourceGitignore);
+  return filesInFolder.filter(searchFile(languages));
 }
 
 function writing(files) {
   const report = [];
+
   files.forEach(i => {
     const contents = fs.readFileSync(`${sourceGitignore}/${i}`, 'utf8');
     const replaceDotWithSpace = i.replace(/[.]/g, ' ');
+
     fs.appendFileSync(
       `${CURR_DIR}/.gitignore`,
       `\n# ${replaceDotWithSpace}\n` + contents
@@ -27,13 +23,13 @@ function writing(files) {
   });
 
   const reportMessage = `
-  ${report.join()} has been added
+  ${report.join()} have been added
   `;
   console.log(reportMessage);
 }
 
 function add(languages) {
-  if (languages.length === 0) return console.log('no language');
+  if (languages.length === 0) return console.log('no language defined');
 
   const files = getFile(languages);
   writing(files);

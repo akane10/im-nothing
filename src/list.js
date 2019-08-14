@@ -3,7 +3,7 @@ const { sourceGitignore } = require('./helper');
 
 function list() {
   const files = fs.readdirSync(sourceGitignore);
-  const f = files.filter(
+  const filtered = files.filter(
     i =>
       i !== 'README.md' &&
       i !== '.github' &&
@@ -13,9 +13,9 @@ function list() {
       i !== '.travis.yml'
   );
 
-  const names = f.map(i => {
-    const x = i.split('.');
-    const onlyName = x[0].toLowerCase();
+  const names = filtered.map(i => {
+    const splited = i.split('.');
+    const onlyName = splited[0].toLowerCase();
     return onlyName;
   });
   console.log(names.join(', \n'));
