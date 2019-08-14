@@ -13,10 +13,12 @@ function list() {
       i !== '.travis.yml'
   );
 
-  f.forEach(i => {
+  const names = f.map(i => {
     const x = i.split('.');
-    console.log(x[0].toLowerCase());
+    const onlyName = x[0].toLowerCase();
+    return onlyName;
   });
+  console.log(names.join(', \n'));
 }
 
 module.exports = list;

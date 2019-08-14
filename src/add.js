@@ -26,10 +26,10 @@ function writing(files) {
     report.push(x[0].toLowerCase());
   });
 
-  const x = `
+  const reportMessage = `
   ${report.join()} has been added
   `;
-  console.log(x);
+  console.log(reportMessage);
 }
 
 function add(languages) {

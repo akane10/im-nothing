@@ -9,5 +9,9 @@ const help = require('./src/help');
   if (command === '-list') return list();
   if (command === '-help') return help();
 
-  console.log('command not found');
+  console.log(`
+  command ${command} doesn't exist
+
+  valid commands are -add, -list, -help
+  `);
 })();
