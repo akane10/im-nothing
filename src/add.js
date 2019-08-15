@@ -7,6 +7,12 @@ function appendContents(path_, contents) {
   });
 }
 
+function isFileEmpty(path_) {
+  const content = fs.readFileSync(path_, 'utf8');
+  if (content.length === 0) return true;
+  return false;
+}
+
 function writing(files) {
   const pathToAppend = `${CURR_DIR}/.gitignore`;
 
@@ -17,15 +23,29 @@ function writing(files) {
       content
     };
   };
-  const commentContent = i => {
+  const renameFile = i => {
     const fileName = i.fileName.replace(/[.]/g, ' ');
     return {
       fileName,
-      content: `\n# ${fileName}\n ${i.content}`
+      content: i.content
+    };
+  };
+  const commentContent = i => {
+    const content = new Map([
+      [true, `# ${i.fileName}\n${i.content}`],
+      [false, `\n# ${i.fileName}\n${i.content}`]
+    ]);
+    const isEmpty = isFileEmpty(pathToAppend);
+    return {
+      fileName: i.fileName,
+      content: content.get(isEmpty)
     };
   };
 
-  const data = files.map(readFolder).map(commentContent);
+  const data = files
+    .map(readFolder)
+    .map(renameFile)
+    .map(commentContent);
 
   appendContents(pathToAppend, data);
 
@@ -33,7 +53,7 @@ function writing(files) {
   const fileNames = data
     .map(i => i.fileName)
     .map(splitFileName)
-    .map(([name]) => name);
+    .map(([name]) => name.toLowerCase());
 
   const reportMessage = `
   ${fileNames.join(', ')} have been added
