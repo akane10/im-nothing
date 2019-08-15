@@ -9,11 +9,11 @@ const sourceGitignore = joinPath(`../gitignore`);
 // GitignoreFileName = String (node.gitignore, etc)
 // searchFile :: [Language] -> [GitignoreFileName] -> [GitignoreFileName]
 const searchFile = languages => file => {
-  const filtered = languages.filter(
+  const [filtered] = languages.filter(
     i => `${i}.gitignore` === file.toLowerCase()
   );
 
-  return filtered[0];
+  return filtered;
 };
 
 module.exports = {
