@@ -8,9 +8,13 @@ function appendContents(path_, contents) {
 }
 
 function isFileEmpty(path_) {
-  const content = fs.readFileSync(path_, 'utf8');
-  if (content.length === 0) return true;
-  return false;
+  try {
+    const content = fs.readFileSync(path_, 'utf8');
+    if (content.length === 0) return true;
+    return false;
+  } catch (e) {
+    return false;
+  }
 }
 
 function writing(files) {
