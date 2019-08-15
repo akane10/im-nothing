@@ -12,9 +12,14 @@ function exist(languages) {
     .map(splitFileName)
     .map(toLower);
 
-  if (names.length === 0) return console.log('nothing exists');
+  if (names.length === 0)
+    return console.log(`
+  nothing exists
+  `);
 
-  console.log(`"${names.join(', ')}" exist`);
+  console.log(`
+  "${names.join(', ')}" exist
+  `);
 }
 
 module.exports = exist;

@@ -13,7 +13,7 @@ function isFileEmpty(path_) {
     if (content.length === 0) return true;
     return false;
   } catch (e) {
-    return false;
+    return 'no file';
   }
 }
 
@@ -37,7 +37,8 @@ function writing(files) {
   const commentContent = i => {
     const content = new Map([
       [true, `# ${i.fileName}\n${i.content}`],
-      [false, `\n# ${i.fileName}\n${i.content}`]
+      [false, `\n# ${i.fileName}\n${i.content}`],
+      ['no file', `# ${i.fileName}\n${i.content}`]
     ]);
     const isEmpty = isFileEmpty(pathToAppend);
     return {
