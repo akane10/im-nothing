@@ -7,7 +7,7 @@ But anyway, source gitignore files is from [github/gitignore](https://github.com
 
 ### USAGE
 
-just type something in your terminal like this :
+just type in your terminal (make sure you have npm version 5.2+ installed) :
 
 ```
 $ npx im-nothing <command> <languages>
