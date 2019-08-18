@@ -12,6 +12,11 @@ function unique(arr) {
 (function main() {
   const [_, __, command, ...args] = process.argv;
 
+  if (command === undefined)
+    return console.log(`
+  oopss looks like it's missing command
+  `);
+
   const languages = unique(args.map(i => i.toLowerCase()));
 
   if (command === 'add') return add(languages);
