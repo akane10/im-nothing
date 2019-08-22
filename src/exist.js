@@ -1,25 +1,10 @@
 const fs = require('fs');
-const { sourceGitignore, searchFile } = require('./helper');
+const { sourceGitignore, otherThanGitignore } = require('./helper');
 const getEditDistance = require('../ed');
 
 // isThere :: [String] -> String -> Boolean
 const isThere = languages => file => {
   return languages.includes(file.toLowerCase());
-};
-
-const otherThanGitignore = i =>
-  i !== 'README.md' &&
-  i !== 'CONTRIBUTING.md' &&
-  i !== 'LICENSE' &&
-  i !== '.travis.yml';
-
-const isFile = i => {
-  try {
-    const stats = fs.statSync(`${sourceGitignore}/${i}`);
-    return stats.isFile();
-  } catch (e) {
-    return false;
-  }
 };
 
 function exist(languages) {
@@ -38,38 +23,44 @@ function exist(languages) {
 
   const notMatch = languages.filter(isntThere(names));
 
-  const saveFilter = i => {
-    if (i && i.distance <= 2) {
+  const safeFilter = i => {
+    if (i && i.distance <= 3 && i.suggest !== '') {
       return i;
     }
-    return {};
+    return null;
   };
 
   const getDistance = i => {
-    return files
-      .filter(isFile)
-      .filter(otherThanGitignore)
-      .map(splitFileName)
-      .map(toLower)
-      .map(ii => {
-        return {
-          language: i,
-          suggest: ii,
-          distance: getEditDistance(i, ii)
-        };
-      })
-      .sort((a, b) => a.distance - b.distance)
-      .map(saveFilter);
+    return (
+      files
+        // .filter(isFile)
+        .filter(otherThanGitignore)
+        .map(splitFileName)
+        .map(toLower)
+        .map(ii => {
+          return {
+            language: i,
+            suggest: ii,
+            distance: getEditDistance(i, ii)
+          };
+        })
+        .sort((a, b) => a.distance - b.distance)
+        .map(safeFilter)
+        .filter(Boolean)
+    );
   };
 
-  const suggestL = notMatch
-    .map(getDistance)
-    .map(([i]) => i.suggest)
-    .filter(Boolean)
-    .reduce((acc, val) => acc.concat(val), []);
-  // console.log(suggestL);
+  const getSuggest = ([i]) => {
+    if (i) return i.suggest;
+    return null;
+  };
 
-  if (names.length === 0 && suggestL.length === 0)
+  const suggest = notMatch
+    .map(getDistance)
+    .map(getSuggest)
+    .filter(Boolean);
+
+  if (names.length === 0 && suggest.length === 0)
     return console.log(`
   nothing exists
   `);
@@ -80,9 +71,15 @@ function exist(languages) {
     `);
   }
 
-  if (notMatch.length > 0) {
+  if (notMatch.length > 0 && suggest.length > 0) {
     console.log(`
-  "${notMatch.join(', ')}" doesnt exist, maybe you mean ${suggestL.join(', ')}
+  "${notMatch.join(', ')}" doesnt exist, maybe you mean ${suggest.join(', ')}
+    `);
+  }
+
+  if (notMatch.length > 0 && suggest.length === 0) {
+    console.log(`
+  "${notMatch.join(', ')}" doesnt exist
     `);
   }
 }

@@ -53,6 +53,10 @@ function writing(files) {
 
   appendContents(pathToAppend, data);
 
+  return data;
+}
+
+function reporting(data) {
   const splitFileName = i => i.split(' ');
   const fileNames = data
     .map(i => i.fileName)
@@ -60,8 +64,8 @@ function writing(files) {
     .map(([name]) => name.toLowerCase());
 
   const reportMessage = `
-  ${fileNames.join(', ')} have been added
-  `;
+${fileNames.join(', ')} have been added
+`;
   console.log(reportMessage);
 }
 
@@ -71,7 +75,8 @@ function add(languages) {
   const filesInFolder = fs.readdirSync(sourceGitignore);
 
   const files = filesInFolder.filter(searchFile(languages));
-  writing(files);
+  const data = writing(files);
+  reporting(data);
 }
 
 module.exports = add;

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { sourceGitignore } = require('./helper');
+const { sourceGitignore, otherThanGitignore } = require('./helper');
 
 function list() {
   const files = fs.readdirSync(sourceGitignore);
@@ -14,11 +14,6 @@ function list() {
   };
   const splitFileName = i => i.split('.');
   const toLower = ([name]) => name.toLowerCase();
-  const otherThanGitignore = i =>
-    i !== 'README.md' &&
-    i !== 'CONTRIBUTING.md' &&
-    i !== 'LICENSE' &&
-    i !== '.travis.yml';
 
   const names = files
     .filter(isFile)
