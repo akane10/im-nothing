@@ -63,7 +63,7 @@ function writing(files) {
     .map(renameFile)
     .map(commentContent);
 
-  // appendContents(pathToAppend, data);
+  appendContents(pathToAppend, data);
 
   return data;
 }
