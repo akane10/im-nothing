@@ -1,6 +1,6 @@
 {
   "name": "im-nothing",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "gitignore generator",
   "main": "main.js",
   "scripts": {
