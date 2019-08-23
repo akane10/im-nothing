@@ -2,16 +2,9 @@ const fs = require('fs');
 const {
   CURR_DIR,
   sourceGitignore,
-  searchFile,
-  otherThanGitignore,
-  log
+  isThere,
+  findEditDistance
 } = require('./helper');
-const getEditDistance = require('../ed');
-
-// isThere :: [String] -> String -> Boolean
-const isThere = languages => file => {
-  return languages.includes(file.toLowerCase());
-};
 
 function appendContents(path_, contents) {
   contents.forEach(i => {
@@ -69,56 +62,15 @@ function writing(files) {
 }
 
 function reporting(data, languages) {
-  const files = fs.readdirSync(sourceGitignore);
-
-  const toLower = ([name]) => name.toLowerCase();
-
   const splitFileName = i => i.split(' ');
   const fileNames = data
     .map(i => i.fileName)
     .map(splitFileName)
     .map(([name]) => name.toLowerCase());
 
-  const isntThere = names => i => !isThere(names)(i);
+  const distance = findEditDistance(data, languages);
 
-  const failed = languages.filter(isntThere(fileNames));
-
-  const safeFilter = i => {
-    if (i && i.distance <= 3 && i.suggest !== '') {
-      return i;
-    }
-    return null;
-  };
-
-  const getDistance = i => {
-    return files
-      .filter(otherThanGitignore)
-      .map(i => i.split('.'))
-      .map(toLower)
-      .map(ii => {
-        return {
-          language: i,
-          suggest: ii,
-          distance: getEditDistance(i, ii)
-        };
-      })
-      .sort((a, b) => a.distance - b.distance)
-      .map(safeFilter)
-      .filter(Boolean);
-  };
-
-  const getSuggest = ([i]) => {
-    if (i) return i.suggest;
-    return null;
-  };
-
-  const suggest = failed
-    .map(getDistance)
-    .map(getSuggest)
-    .filter(Boolean);
-  // .map(log);
-
-  if (fileNames.length === 0 && suggest.length === 0)
+  if (fileNames.length === 0 && distance.suggest.length === 0)
     return console.log(`
   nothing added
   `);
@@ -129,18 +81,17 @@ function reporting(data, languages) {
   `);
   }
 
-  // console.log(reportMessage);
-  // console.log(`  maybe you mean ${suggest.join(', ')}`);
-
-  if (failed.length > 0 && suggest.length > 0) {
+  if (distance.notMatch.length > 0 && distance.suggest.length > 0) {
     console.log(`
-  "${failed.join(', ')}" doesnt exist, maybe you mean ${suggest.join(', ')}
+  "${distance.notMatch.join(
+    ', '
+  )}" doesnt exist, maybe you mean ${distance.suggest.join(', ')}
     `);
   }
 
-  if (failed.length > 0 && suggest.length === 0) {
+  if (distance.notMatch.length > 0 && distance.suggest.length === 0) {
     console.log(`
-  "${failed.join(', ')}" doesnt exist
+  "${distance.notMatch.join(', ')}" doesnt exist
     `);
   }
 }
@@ -150,7 +101,14 @@ function add(languages) {
 
   const filesInFolder = fs.readdirSync(sourceGitignore);
 
-  const files = filesInFolder.filter(searchFile(languages));
+  const splitFileName = i => i.split('.');
+  const toLower = ([name]) => name.toLowerCase();
+
+  const files = filesInFolder
+    .map(splitFileName)
+    .map(toLower)
+    .filter(isThere(languages));
+
   const data = writing(files);
   reporting(data, languages);
 }
