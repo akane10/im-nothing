@@ -65,7 +65,7 @@ function findEditDistance(names, languages) {
     .map(getSuggest)
     .filter(Boolean);
 
-  return { suggest: suggest || [], notMatch: notMatch || [] };
+  return { suggest: suggest, notMatch: notMatch };
 }
 
 module.exports = {
