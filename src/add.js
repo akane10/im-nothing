@@ -1,10 +1,9 @@
 const fs = require('fs');
-const {
-  CURR_DIR,
-  sourceGitignore,
-  isThere,
-  findEditDistance
-} = require('./helper');
+const { CURR_DIR, sourceGitignore, findEditDistance } = require('./helper');
+
+const searchFile = languages => file => {
+  return languages.map(i => `${i}.gitignore`).includes(file.toLowerCase());
+};
 
 function appendContents(path_, contents) {
   contents.forEach(i => {
@@ -101,13 +100,7 @@ function add(languages) {
 
   const filesInFolder = fs.readdirSync(sourceGitignore);
 
-  const splitFileName = i => i.split('.');
-  const toLower = ([name]) => name.toLowerCase();
-
-  const files = filesInFolder
-    .map(splitFileName)
-    .map(toLower)
-    .filter(isThere(languages));
+  const files = filesInFolder.filter(searchFile(languages));
 
   const data = writing(files);
   reporting(data, languages);

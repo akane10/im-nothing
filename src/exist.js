@@ -35,7 +35,7 @@ function exist(languages) {
 
   if (distance.notMatch.length > 0 && distance.suggest.length === 0) {
     console.log(`
-  "${notMatch.join(', ')}" doesnt exist
+  "${distance.notMatch.join(', ')}" doesnt exist
     `);
   }
 }
