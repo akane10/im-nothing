@@ -1,5 +1,17 @@
 const fs = require('fs');
-const { CURR_DIR, sourceGitignore, searchFile } = require('./helper');
+const {
+  CURR_DIR,
+  sourceGitignore,
+  searchFile,
+  otherThanGitignore,
+  log
+} = require('./helper');
+const getEditDistance = require('../ed');
+
+// isThere :: [String] -> String -> Boolean
+const isThere = languages => file => {
+  return languages.includes(file.toLowerCase());
+};
 
 function appendContents(path_, contents) {
   contents.forEach(i => {
@@ -51,22 +63,86 @@ function writing(files) {
     .map(renameFile)
     .map(commentContent);
 
-  appendContents(pathToAppend, data);
+  // appendContents(pathToAppend, data);
 
   return data;
 }
 
-function reporting(data) {
+function reporting(data, languages) {
+  const files = fs.readdirSync(sourceGitignore);
+
+  const toLower = ([name]) => name.toLowerCase();
+
   const splitFileName = i => i.split(' ');
   const fileNames = data
     .map(i => i.fileName)
     .map(splitFileName)
     .map(([name]) => name.toLowerCase());
 
-  const reportMessage = `
-${fileNames.join(', ')} have been added
-`;
-  console.log(reportMessage);
+  const isntThere = names => i => !isThere(names)(i);
+
+  const failed = languages.filter(isntThere(fileNames));
+
+  const safeFilter = i => {
+    if (i && i.distance <= 3 && i.suggest !== '') {
+      return i;
+    }
+    return null;
+  };
+
+  const getDistance = i => {
+    return files
+      .filter(otherThanGitignore)
+      .map(i => i.split('.'))
+      .map(toLower)
+      .map(ii => {
+        return {
+          language: i,
+          suggest: ii,
+          distance: getEditDistance(i, ii)
+        };
+      })
+      .sort((a, b) => a.distance - b.distance)
+      .map(safeFilter)
+      .filter(Boolean);
+  };
+
+  const getSuggest = ([i]) => {
+    if (i) return i.suggest;
+    return null;
+  };
+
+  const suggest = failed
+    .map(getDistance)
+    .map(getSuggest)
+    .filter(Boolean);
+  // .map(log);
+
+  if (fileNames.length === 0 && suggest.length === 0)
+    return console.log(`
+  nothing added
+  `);
+
+  if (fileNames.length > 0) {
+    console.log(`
+  "${fileNames.join(', ')}" have been added
+  `);
+  }
+
+  // console.log(reportMessage);
+  // console.log(`  maybe you mean ${suggest.join(', ')}`);
+
+  if (failed.length > 0 && suggest.length > 0) {
+    console.log(`
+  "${failed.join(', ')}" doesnt exist, maybe you mean ${suggest.join(', ')}
+    `);
+  }
+
+  if (failed.length > 0 && suggest.length === 0) {
+    console.log(`
+  "${failed.join(', ')}" doesnt exist
+    `);
+  }
 }
 
 function add(languages) {
@@ -76,7 +152,7 @@ function add(languages) {
 
   const files = filesInFolder.filter(searchFile(languages));
   const data = writing(files);
-  reporting(data);
+  reporting(data, languages);
 }
 
 module.exports = add;

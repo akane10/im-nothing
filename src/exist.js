@@ -31,23 +31,20 @@ function exist(languages) {
   };
 
   const getDistance = i => {
-    return (
-      files
-        // .filter(isFile)
-        .filter(otherThanGitignore)
-        .map(splitFileName)
-        .map(toLower)
-        .map(ii => {
-          return {
-            language: i,
-            suggest: ii,
-            distance: getEditDistance(i, ii)
-          };
-        })
-        .sort((a, b) => a.distance - b.distance)
-        .map(safeFilter)
-        .filter(Boolean)
-    );
+    return files
+      .filter(otherThanGitignore)
+      .map(splitFileName)
+      .map(toLower)
+      .map(ii => {
+        return {
+          language: i,
+          suggest: ii,
+          distance: getEditDistance(i, ii)
+        };
+      })
+      .sort((a, b) => a.distance - b.distance)
+      .map(safeFilter)
+      .filter(Boolean);
   };
 
   const getSuggest = ([i]) => {
