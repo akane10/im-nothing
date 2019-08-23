@@ -20,6 +20,7 @@ const isThere = languages => file => {
   return languages.includes(file.toLowerCase());
 };
 
+// findEditDistance :: [String] -> [String] -> {key: [String], key: [String]}
 function findEditDistance(names, languages) {
   const files = fs.readdirSync(sourceGitignore);
 

@@ -8,7 +8,6 @@ function exist(languages) {
   const toLower = ([name]) => name.toLowerCase();
 
   const names = files
-    // .filter(searchFile(languages))
     .map(splitFileName)
     .map(toLower)
     .filter(isThere(languages));
