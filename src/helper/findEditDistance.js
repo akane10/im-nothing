@@ -1,7 +1,7 @@
 const getEditDistance = require('./edit-distance');
 const { otherThanGitignore } = require('./helper');
 
-// findEditDistance :: [String] -> [String] -> {key: [String], key: [String]}
+// findEditDistance :: [String] -> [FileGitignore] -> {key: [String], key: [String]}
 function findEditDistance(notMatch, files) {
   const splitFileName = i => i.split('.');
   const toLower = ([name]) => name.toLowerCase();
