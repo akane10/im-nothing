@@ -4,7 +4,7 @@
   "description": "gitignore generator",
   "main": "main.js",
   "scripts": {
-    "test": "jest --testPathIgnorePatterns im-nothing/"
+    "test": "jest --testPathIgnorePatterns gitignore/"
   },
   "bin": {
     "im-nothing": "./main.js"
@@ -21,6 +21,8 @@
     "cli"
   ],
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
   "license": "MIT"
 }

@@ -1,5 +1,6 @@
 const fs = require('fs');
-const { sourceGitignore, findEditDistance, isThere } = require('./helper');
+const { sourceGitignore, isThere } = require('./helper/helper');
+const findEditDistance = require('./helper/findEditDistance');
 
 function exist(languages) {
   const files = fs.readdirSync(sourceGitignore);
@@ -12,7 +13,9 @@ function exist(languages) {
     .map(toLower)
     .filter(isThere(languages));
 
-  const distance = findEditDistance(names, languages);
+  const isntThere = arr => i => !isThere(arr)(i);
+  const notMatch = languages.filter(isntThere(names));
+  const distance = findEditDistance(notMatch, files);
 
   if (names.length === 0 && distance.suggest.length === 0)
     return console.log(`

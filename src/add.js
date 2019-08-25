@@ -1,5 +1,6 @@
 const fs = require('fs');
-const { CURR_DIR, sourceGitignore, findEditDistance } = require('./helper');
+const { CURR_DIR, sourceGitignore, isThere } = require('./helper/helper');
+const findEditDistance = require('./helper/findEditDistance');
 
 const searchFile = languages => file => {
   return languages.map(i => `${i}.gitignore`).includes(file.toLowerCase());
@@ -60,14 +61,16 @@ function writing(files) {
   return data;
 }
 
-function reporting(data, languages) {
+function reporting(data, languages, files) {
   const splitFileName = i => i.split(' ');
   const fileNames = data
     .map(i => i.fileName)
     .map(splitFileName)
     .map(([name]) => name.toLowerCase());
 
-  const distance = findEditDistance(data, languages);
+  const isntThere = arr => i => !isThere(arr)(i);
+  const notMatch = languages.filter(isntThere(fileNames));
+  const distance = findEditDistance(notMatch, files);
 
   if (fileNames.length === 0 && distance.suggest.length === 0)
     return console.log(`
@@ -103,7 +106,7 @@ function add(languages) {
   const files = filesInFolder.filter(searchFile(languages));
 
   const data = writing(files);
-  reporting(data, languages);
+  reporting(data, languages, filesInFolder);
 }
 
 module.exports = add;

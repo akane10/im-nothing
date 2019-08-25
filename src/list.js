@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { sourceGitignore, otherThanGitignore } = require('./helper');
+const { sourceGitignore, otherThanGitignore } = require('./helper/helper');
 
 function list() {
   const files = fs.readdirSync(sourceGitignore);
