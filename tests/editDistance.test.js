@@ -1,11 +1,17 @@
 const getEditDistance = require('../src/helper/edit-distance');
 
+const veryLongStr =
+  'awdihawduhawdskjasdasdghagdhjawgjdhgawdjkbwadjkbawdgawjgdhawdbhwajdgjawfdjhawvdjawfdawdjafwyjdfajdvawjydfawydaudvawdabsdjsavdwawdjbakdbajdjkadjabdbajdbakbdjkawbdjkawbdjkbawkjdbajkbsjkbashdsjkbfkgdksbfkjgfjkgsajkgjkadjakwhdawjdhahdkjahdjkhadkjhawkjdhajkwdjkawhdkjawhdkjhkdjhajdhkjahdjkajkdhajkdhjkahdjkhajkdhajkdhkjawhdjkawhdjkhawkjdhwakjdhwjkahd';
+const veryLongStr1 =
+  'awdihawduhawdskjasdasdghagdhjawgjdhgawdjkbwadjkbawdgawjgdhawdbhwajdgjawfdjhawvdjawfdawdjafwyjdfajdvawjydfawydaudvawdabsdjsavdwawdjbakdbajdjkadjabdbajdbakbdjkawbdjkawbdjkbawkjdbajkbsjkbashdsjkbfkgdksbfkjgfjkgsajkgjkadjakwhdawjdhahdkjahdjkhadkjhawkjdhajkwdjkawhdkjawhdkjhkdjhajdhkjahdjkajkdhajkdhjkahdjkhajkdhajkdhkjawhdjkawhdjkhawkjdhwakjdhwjkahdwww';
+
 const dataTest = [
   // [value test, behavior, expected]
   [['hello', 'helo'], 'should get', 1],
   [['hola', 'hi'], 'should get', 3],
   [['haha', 'hehe'], 'should get', 2],
-  [['jaja', 'hahah'], 'should get', 3]
+  [['jaja', 'hahah'], 'should get', 3],
+  [[veryLongStr, veryLongStr1], 'should get', 3]
 ];
 
 describe.each(dataTest)(
