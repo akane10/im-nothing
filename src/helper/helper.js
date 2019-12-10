@@ -1,23 +1,28 @@
-const path = require('path');
+const path = require("path");
 
-const joinPath = pathArg => path.join(`${__dirname}`, `${pathArg}`);
+const joinPath = path.join;
 const CURR_DIR = process.cwd();
-const sourceGitignore = joinPath(`../../gitignore`);
+const sourceGitignore = joinPath(__dirname, `../../gitignore`);
 
 const log = i => {
-  console.log('log', i);
+  console.log("log", i);
   return i;
 };
 
 const otherThanGitignore = i =>
-  i !== 'README.md' &&
-  i !== 'CONTRIBUTING.md' &&
-  i !== 'LICENSE' &&
-  i !== '.travis.yml';
+  i !== "README.md" &&
+  i !== "CONTRIBUTING.md" &&
+  i !== "LICENSE" &&
+  i !== ".travis.yml";
 
 // isThere :: [String] -> String -> Boolean
 const isThere = languages => file => {
   return languages.includes(file.toLowerCase());
+};
+
+const errHandler = err => {
+  console.error(err.message || err);
+  process.exit(1);
 };
 
 module.exports = {
@@ -25,5 +30,7 @@ module.exports = {
   sourceGitignore,
   log,
   otherThanGitignore,
-  isThere
+  isThere,
+  joinPath,
+  errHandler
 };
