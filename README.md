@@ -25,7 +25,3 @@ help
 example :
 $ npx im-nothing add node c java
 ```
-
-#### Note
-
-this probably won't work on windows
